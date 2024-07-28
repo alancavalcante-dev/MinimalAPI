@@ -27,7 +27,7 @@ app.MapGet("rango/", async Task<Results<Ok<List<Rango>>, Ok<Rango>, NoContent>>
 
     IQueryable<Rango> entity = db.Rangos;
     var itemRango = await entity.AsNoTracking().ToListAsync();
-    if (itemRango == null)
+    if (itemRango == null || itemRango.Count == 0)
         return TypedResults.NoContent();
     return TypedResults.Ok(itemRango);
        
@@ -38,6 +38,9 @@ app.MapGet("rango/{id:int}", async Task<Results<Ok<Rango>, NoContent>>
 
     IQueryable<Rango> entity = db.Rangos;
     var itemRango = await entity.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
+    
+    if (itemRango == null) 
+        return TypedResults.NoContent();
     return TypedResults.Ok(itemRango);
 
 });
