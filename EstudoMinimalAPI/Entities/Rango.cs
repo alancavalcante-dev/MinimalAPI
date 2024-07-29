@@ -8,6 +8,7 @@ public class Rango {
     public int Id { get; set; }
     [MaxLength(100)]
     public string? Nome { get; set; }
+    public ICollection<Ingrediente> Ingredientes { get; set; }
 
     public Rango()
     {

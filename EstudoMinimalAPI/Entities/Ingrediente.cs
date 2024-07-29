@@ -8,6 +8,7 @@ public class Ingrediente {
     public int Id { get; set; }
     [MaxLength(100)]
     public string? Nome { get; set; }
+    public ICollection<Rango> Rangos { get; set; }
 
     public Ingrediente() {
 

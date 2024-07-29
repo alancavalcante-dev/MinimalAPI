@@ -12,7 +12,12 @@ builder.Services.AddDbContext<RangoDbContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("RangoDbConStr"))
 );
 
-// builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// currentdomain = dominio atual
+// pega todos os assemblies criados e vai puxar de quem herda o profile, e acrescenta para o builder.
+
+
+
 
 
 var app = builder.Build();
@@ -33,17 +38,30 @@ app.MapGet("rango/", async Task<Results<Ok<List<Rango>>, Ok<Rango>, NoContent>>
        
 });
 
-app.MapGet("rango/{id:int}", async Task<Results<Ok<Rango>, NoContent>>
-    (RangoDbContext db, int id) => {
+app.MapGet("rango/{rangoId:int}", async Task<Results<Ok<Rango>, NoContent>>
+    (RangoDbContext db, int rangoId) => {
 
     IQueryable<Rango> entity = db.Rangos;
-    var itemRango = await entity.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
+    var itemRango = await entity.AsNoTracking().FirstOrDefaultAsync(r => r.Id == rangoId);
     
     if (itemRango == null) 
         return TypedResults.NoContent();
     return TypedResults.Ok(itemRango);
 
 });
+
+
+app.MapGet("rango/{rangoId:int}/ingredientes", async Task<Results<Ok<Rango>, NoContent>>
+    (RangoDbContext db, int rangoId) => {
+
+        IQueryable<Rango> entity = db.Rangos;
+        var itemRango = await entity.AsNoTracking().Include(r => r.Ingredientes).FirstOrDefaultAsync(r => r.Id == rangoId);
+
+        if (itemRango == null)
+            return TypedResults.NoContent();
+        return TypedResults.Ok(itemRango);
+
+    });
 
 
 
