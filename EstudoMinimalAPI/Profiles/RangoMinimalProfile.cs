@@ -9,6 +9,7 @@ public class RangoMinimalProfile : Profile {
     public RangoMinimalProfile()
     {
         CreateMap<Rango, RangoDTO>().ReverseMap();
+        CreateMap<Rango, RangoParaCriacaoDTO>().ReverseMap();
         CreateMap<Ingrediente, IngredienteDTO>()
             .ForMember(
                 d => d.RangoId,

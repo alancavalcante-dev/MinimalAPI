@@ -29,7 +29,7 @@ var app = builder.Build();
 app.MapGet("/", () => "Hello World!");
 
 
-app.MapGet("rango/", async Task<Results<Ok<List<Rango>>, Ok<Rango>, NoContent>>
+app.MapGet("rangos/", async Task<Results<Ok<List<Rango>>, Ok<Rango>, NoContent>>
     (RangoDbContext db,
     [FromQuery(Name = "nome")] string? rangoNome) => {
 
@@ -87,12 +87,47 @@ app.MapGet("rango/{rangoId:int}/ingredientes", async Task<Results<Ok<List<Ingred
 
 
 
-app.MapPost("", async Task<Results<Ok<Rango>, BadRequest<Exception>>>
-    (RangoDbContext db, [FromBody] Rango rango) => {
-        db.Rangos.Add(rango);
-        await db.SaveChangesAsync();
-        return TypedResults.Ok(rango);
+app.MapPost("rangos/",
+    (RangoDbContext db, 
+    [FromBody] RangoParaCriacaoDTO rangoBody,
+    IMapper mapper) => {
+        var entityRango = mapper.Map<Rango>(rangoBody);
+        db.Rangos.Add(entityRango);
+        db.SaveChanges();
+
+        var returnToEntity = mapper.Map<RangoDTO>(entityRango);
+        return TypedResults.Created($"https://localhost:7207/rango/{returnToEntity.Id}", returnToEntity);
+
 });
+
+app.MapPut("rangos/{rangoId:int}",
+    (RangoDbContext db,
+    [FromBody] RangoDTO rangoBody,
+    int rangoId,
+    IMapper mapper) => {
+        var entityRango = mapper.Map<Rango>(rangoBody);
+        db.Rangos.Update(entityRango);
+        db.SaveChanges();
+
+        var returnToEntity = mapper.Map<RangoDTO>(entityRango);
+        return TypedResults.Ok(returnToEntity);
+
+    });
+
+
+app.MapPut("rango/{rangoId:int}",
+    (RangoDbContext db,
+    [FromBody] RangoParaCriacaoDTO rangoBody,
+    int rangoId,
+    IMapper mapper) => {
+        var entityRango = mapper.Map<Rango>(rangoBody);
+        db.Rangos.Update(entityRango);
+        db.SaveChanges();
+
+        var returnToEntity = mapper.Map<RangoDTO>(entityRango);
+        return TypedResults.Ok(returnToEntity);
+
+    });
 
 
 
