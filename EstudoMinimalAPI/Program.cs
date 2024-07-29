@@ -56,7 +56,7 @@ app.MapGet("rango/{rangoId:int}", async Task<Results<Ok<RangoDTO>, NoContent>>
         return TypedResults.NoContent();
 
     return TypedResults.Ok(entityRango);
-});
+}).WithName("GetRango");
 
 
 
@@ -87,45 +87,55 @@ app.MapGet("rango/{rangoId:int}/ingredientes", async Task<Results<Ok<List<Ingred
 
 
 
-app.MapPost("rangos/",
+app.MapPost("rangos/", async
     (RangoDbContext db, 
     [FromBody] RangoParaCriacaoDTO rangoBody,
     IMapper mapper) => {
         var entityRango = mapper.Map<Rango>(rangoBody);
         db.Rangos.Add(entityRango);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
 
         var returnToEntity = mapper.Map<RangoDTO>(entityRango);
-        return TypedResults.Created($"https://localhost:7207/rango/{returnToEntity.Id}", returnToEntity);
+        return TypedResults.CreatedAtRoute(returnToEntity, "GetRango", new { rangoId = returnToEntity.Id });
 
 });
 
-app.MapPut("rangos/{rangoId:int}",
+
+
+app.MapPut("rango/{rangoId:int}",async Task<Results<Ok<RangoParaAtualizacaoDTO>, NotFound>>
     (RangoDbContext db,
-    [FromBody] RangoDTO rangoBody,
+    [FromBody] RangoParaAtualizacaoDTO rangoBody,
     int rangoId,
     IMapper mapper) => {
-        var entityRango = mapper.Map<Rango>(rangoBody);
-        db.Rangos.Update(entityRango);
-        db.SaveChanges();
+        
+        var entityRango = await db.Rangos.FirstOrDefaultAsync(x => x.Id == rangoId);
+        if (entityRango == null)
+            return TypedResults.NotFound();
 
-        var returnToEntity = mapper.Map<RangoDTO>(entityRango);
-        return TypedResults.Ok(returnToEntity);
+        mapper.Map(rangoBody, entityRango);
+
+        await db.SaveChangesAsync();
+
+        return TypedResults.Ok(rangoBody);
 
     });
 
 
-app.MapPut("rango/{rangoId:int}",
+app.MapDelete("rango/{rangoId:int}", async Task<Results<Ok<string>, NotFound>>
     (RangoDbContext db,
-    [FromBody] RangoParaCriacaoDTO rangoBody,
+    [FromBody] RangoParaDelecaoDTO rangoBody,
     int rangoId,
     IMapper mapper) => {
-        var entityRango = mapper.Map<Rango>(rangoBody);
-        db.Rangos.Update(entityRango);
-        db.SaveChanges();
 
-        var returnToEntity = mapper.Map<RangoDTO>(entityRango);
-        return TypedResults.Ok(returnToEntity);
+        var entityRango = await db.Rangos.FirstOrDefaultAsync(x => x.Id == rangoId);
+        if (entityRango == null)
+            return TypedResults.NotFound();
+
+        db.Remove(entityRango);
+
+        await db.SaveChangesAsync();
+
+        return TypedResults.Ok("Deletado com sucesso!");
 
     });
 
