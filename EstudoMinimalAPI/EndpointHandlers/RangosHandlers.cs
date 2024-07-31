@@ -75,7 +75,6 @@ public class RangosHandlers
 
     public static async Task<Results<Ok<string>, NotFound>> DeleteRangoAsync
     (RangoDbContext db,
-    [FromBody] RangoParaDelecaoDTO rangoBody,
     int rangoId,
     IMapper mapper) 
     {

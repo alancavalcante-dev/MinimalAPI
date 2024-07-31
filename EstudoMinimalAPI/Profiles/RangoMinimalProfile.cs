@@ -14,8 +14,8 @@ public class RangoMinimalProfile : Profile {
         CreateMap<Rango, RangoParaDelecaoDTO>().ReverseMap();
         CreateMap<Ingrediente, IngredienteDTO>()
             .ForMember(
-                d => d.RangoId,
-                o => o.MapFrom(s => s.Rangos.First().Id)
+                destino => destino.RangoId, // destino
+                origem => origem.MapFrom(s => s.Rangos.First().Id) // origem
         );
 
         //Linha 1: CreateMap<Ingrediente, IngredienteDTO>()
