@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EstudoMinimalAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e756f8bfaed1089319fa33348001c4ef3f344aa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+081d9b58763ea23a8393e9248a10387a38324822")]
 [assembly: System.Reflection.AssemblyProductAttribute("EstudoMinimalAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EstudoMinimalAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -43,29 +43,6 @@ public class RangosHandlers
     return TypedResults.Ok(entityRango);
     }
 
-
-    public static async Task<Results<Ok<List<IngredienteDTO>>, NoContent>> 
-    GetByIdRangosIngredienteAsync
-    (RangoDbContext db,
-    int rangoId,
-    IMapper mapper)  
-    {
-        IQueryable<Rango> entity = db.Rangos;
-        var rangoEntity = mapper.Map<List<IngredienteDTO>>(
-        (
-        await entity.AsNoTracking() // Consulta sem rastreamento
-        .Include(r => r.Ingredientes) // Carrega os ingredientes relacionados
-        .FirstOrDefaultAsync(r => r.Id == rangoId) // Filtra pelo ID especificado
-        )
-        ?.Ingredientes // Acessa os ingredientes se o objeto não for nulo
-        );
-
-        if (rangoEntity == null || rangoEntity.Count == 0)
-            return TypedResults.NoContent();
-        return TypedResults.Ok(rangoEntity);
-
-    }
-
     public static async Task<Results<Ok<RangoDTO>, BadRequest>> PostRangoAsync 
     (RangoDbContext db,
     [FromBody] RangoParaCriacaoDTO rangoBody,

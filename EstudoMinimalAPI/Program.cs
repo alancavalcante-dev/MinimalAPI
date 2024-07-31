@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using EstudoMinimalAPI.DbContexts;
 using EstudoMinimalAPI.EndpointHandlers;
+using EstudoMinimalAPI.Extesions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,16 +15,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
-var rangos = app.MapGroup("rangos/");
-var rango = app.MapGroup("rango/");
+app.RegisterRangosEndpoints();
+app.RegisterIngredientesEndpoints();
 
-rangos.MapGet("", RangosHandlers.GetAllRangosAsync);
-rango.MapGet("{rangoId:int}/", RangosHandlers.GetByIdRangosAsync);
-rango.MapGet("{rangoId:int}/ingredientes/", RangosHandlers.GetByIdRangosIngredienteAsync);
-
-rangos.MapPost("", RangosHandlers.PostRangoAsync);
-rangos.MapPut("{rangoId:int}/", RangosHandlers.PutRangoAsync);
-rangos.MapDelete("{rangoId:int}/", RangosHandlers.DeleteRangoAsync);
 
 app.Run();
