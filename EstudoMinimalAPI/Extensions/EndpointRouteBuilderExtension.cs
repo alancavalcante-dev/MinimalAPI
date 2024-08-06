@@ -1,6 +1,7 @@
 ﻿using EstudoMinimalAPI.EndpointHandlers;
 
-namespace EstudoMinimalAPI.Extesions;
+
+namespace EstudoMinimalAPI.Extensions;
 
 public static class EndpointRouteBuilderExtension
 {
@@ -12,7 +13,10 @@ public static class EndpointRouteBuilderExtension
 
         rangosComIdEndpoints.MapGet("", RangosHandlers.GetByIdRangosAsync);
 
-        rangosEndpoints.MapPost("", RangosHandlers.PostRangoAsync);
+        rangosEndpoints.MapPost("", RangosHandlers.PostRangoAsync)
+            .AddEndpointFilter(async(context, next) => { 
+                next.Invoke
+            });
 
         rangosComIdEndpoints.MapPut("", RangosHandlers.PutRangoAsync);
 

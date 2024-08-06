@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using EstudoMinimalAPI.DbContexts;
 using EstudoMinimalAPI.EndpointHandlers;
-using EstudoMinimalAPI.Extesions;
+using EstudoMinimalAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -10,7 +10,6 @@ using AutoMapper;
 
 public class RangosHandlers
 {
-
     public static async Task<Results<Ok<List<RangoDTO>>, NoContent>> GetAllRangosAsync
     (RangoDbContext db,
     IMapper mapper,
